@@ -277,6 +277,175 @@ def test_get_submissions():
         print(f"❌ Get submissions test failed: {str(e)}")
         return False
 
+def test_project_description_word_count():
+    """Test project description word count validation (max 100 words)"""
+    print("\n=== Testing Project Description Word Count Validation ===")
+    
+    # Test with exactly 100 words (should pass)
+    words_100 = " ".join([f"word{i}" for i in range(100)])
+    valid_data_100_words = {
+        "teamName": "Word Count Team",
+        "teamLeadName": "Test Leader",
+        "teamLeadEmail": "test@example.com",
+        "teamLeadContact": "+1-555-1234",
+        "projectTitle": "Word Count Test",
+        "projectDescription": words_100
+    }
+    
+    # Test with 101 words (should fail)
+    words_101 = " ".join([f"word{i}" for i in range(101)])
+    invalid_data_101_words = {
+        "teamName": "Word Count Team",
+        "teamLeadName": "Test Leader",
+        "teamLeadEmail": "test@example.com",
+        "teamLeadContact": "+1-555-1234",
+        "projectTitle": "Word Count Test",
+        "projectDescription": words_101
+    }
+    
+    all_passed = True
+    
+    # Test 100 words (should pass)
+    print("\nTesting with exactly 100 words (should pass):")
+    try:
+        response = requests.post(
+            f"{API_BASE}/submit",
+            json=valid_data_100_words,
+            headers={'Content-Type': 'application/json'},
+            timeout=15
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            if data.get('success'):
+                print("✅ 100 words accepted correctly")
+            else:
+                print("❌ 100 words rejected incorrectly")
+                all_passed = False
+        else:
+            print(f"❌ 100 words test failed with status {response.status_code}")
+            print(f"Response: {response.text}")
+            all_passed = False
+            
+    except Exception as e:
+        print(f"❌ 100 words test failed: {str(e)}")
+        all_passed = False
+    
+    # Test 101 words (should fail)
+    print("\nTesting with 101 words (should fail):")
+    try:
+        response = requests.post(
+            f"{API_BASE}/submit",
+            json=invalid_data_101_words,
+            headers={'Content-Type': 'application/json'},
+            timeout=15
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code == 400:
+            data = response.json()
+            if 'error' in data and 'Project description must be 100 words or less' in data['error'] and 'Current: 101 words' in data['error']:
+                print("✅ 101 words correctly rejected with proper error message")
+            else:
+                print(f"❌ Wrong error message for 101 words: {data.get('error')}")
+                all_passed = False
+        else:
+            print(f"❌ Expected 400 for 101 words, got {response.status_code}")
+            print(f"Response: {response.text}")
+            all_passed = False
+            
+    except Exception as e:
+        print(f"❌ 101 words test failed: {str(e)}")
+        all_passed = False
+    
+    return all_passed
+
+def test_file_upload_endpoint():
+    """Test file upload endpoint with validation"""
+    print("\n=== Testing File Upload Endpoint ===")
+    
+    all_passed = True
+    
+    # Test 1: No file provided
+    print("\nTesting upload with no file (should fail):")
+    try:
+        response = requests.post(f"{API_BASE}/upload", timeout=10)
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code == 400:
+            data = response.json()
+            if 'error' in data and 'No file provided' in data['error']:
+                print("✅ No file correctly rejected")
+            else:
+                print(f"❌ Wrong error message for no file: {data.get('error')}")
+                all_passed = False
+        else:
+            print(f"❌ Expected 400 for no file, got {response.status_code}")
+            all_passed = False
+            
+    except Exception as e:
+        print(f"❌ No file test failed: {str(e)}")
+        all_passed = False
+    
+    # Test 2: Valid image file (simulated)
+    print("\nTesting upload with valid image file (simulated):")
+    try:
+        # Create a small test image data
+        import io
+        test_image_data = b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x02\x00\x00\x00\x90wS\xde\x00\x00\x00\tpHYs\x00\x00\x0b\x13\x00\x00\x0b\x13\x01\x00\x9a\x9c\x18\x00\x00\x00\nIDATx\x9cc\xf8\x00\x00\x00\x01\x00\x01\x00\x00\x00\x00IEND\xaeB`\x82'
+        
+        files = {'file': ('test.png', io.BytesIO(test_image_data), 'image/png')}
+        data = {'folder': 'test-uploads'}
+        
+        response = requests.post(f"{API_BASE}/upload", files=files, data=data, timeout=15)
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            response_data = response.json()
+            if response_data.get('success') and 'url' in response_data and 'message' in response_data:
+                print("✅ Valid image upload working correctly")
+                print(f"Upload URL: {response_data['url']}")
+            else:
+                print(f"❌ Invalid response structure: {response_data}")
+                all_passed = False
+        else:
+            print(f"❌ Valid image upload failed with status {response.status_code}")
+            print(f"Response: {response.text}")
+            all_passed = False
+            
+    except Exception as e:
+        print(f"❌ Valid image upload test failed: {str(e)}")
+        all_passed = False
+    
+    # Test 3: Invalid file type (simulated)
+    print("\nTesting upload with invalid file type (simulated):")
+    try:
+        files = {'file': ('test.txt', io.BytesIO(b'This is a text file'), 'text/plain')}
+        
+        response = requests.post(f"{API_BASE}/upload", files=files, timeout=10)
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code == 400:
+            data = response.json()
+            if 'error' in data and 'Only image files are allowed' in data['error']:
+                print("✅ Invalid file type correctly rejected")
+            else:
+                print(f"❌ Wrong error message for invalid file type: {data.get('error')}")
+                all_passed = False
+        else:
+            print(f"❌ Expected 400 for invalid file type, got {response.status_code}")
+            print(f"Response: {response.text}")
+            all_passed = False
+            
+    except Exception as e:
+        print(f"❌ Invalid file type test failed: {str(e)}")
+        all_passed = False
+    
+    return all_passed
+
 def test_invalid_endpoints():
     """Test invalid endpoints return 404"""
     print("\n=== Testing Invalid Endpoints ===")
