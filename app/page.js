@@ -6,29 +6,114 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { AlertCircle, CheckCircle2, Rocket, Users, Code2, ExternalLink, Mail, Phone } from 'lucide-react'
+import { AlertCircle, CheckCircle2, Rocket, Users, Code2, ExternalLink, Mail, Phone, FileImage, Video, Upload, X } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export default function HackathonForm() {
   const [formData, setFormData] = useState({
     teamName: '',
     teamLeadName: '',
-    email: '',
-    contact: '',
+    teamLeadEmail: '',
+    teamLeadContact: '',
+    projectTitle: '',
+    projectDescription: '',
     gitLink: '',
     projectUrl: '',
-    otherDetails: ''
+    projectLogoUrl: '',
+    projectBannerUrl: '',
+    videoDemoLink: ''
   })
   
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState(null) // 'success' | 'error'
+  const [submitStatus, setSubmitStatus] = useState(null)
   const [submitMessage, setSubmitMessage] = useState('')
+  const [wordCount, setWordCount] = useState(0)
+  const [uploadingFiles, setUploadingFiles] = useState({
+    logo: false,
+    banner: false
+  })
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
       [name]: value
+    }))
+
+    // Update word count for project description
+    if (name === 'projectDescription') {
+      const words = value.trim().split(/\s+/).filter(word => word.length > 0)
+      setWordCount(words.length)
+    }
+  }
+
+  const handleFileUpload = async (file, type) => {
+    if (!file) return
+
+    // Validate image dimensions for logo and banner
+    const img = new Image()
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+
+    return new Promise((resolve) => {
+      img.onload = async () => {
+        let targetWidth, targetHeight, expectedRatio
+
+        if (type === 'logo') {
+          targetWidth = targetHeight = 100
+          expectedRatio = 1 // Square
+        } else if (type === 'banner') {
+          targetWidth = 300
+          targetHeight = 100
+          expectedRatio = 3 // 3:1 ratio
+        }
+
+        // Resize image to target dimensions
+        canvas.width = targetWidth
+        canvas.height = targetHeight
+        ctx.drawImage(img, 0, 0, targetWidth, targetHeight)
+
+        canvas.toBlob(async (blob) => {
+          setUploadingFiles(prev => ({ ...prev, [type]: true }))
+
+          try {
+            const formData = new FormData()
+            const resizedFile = new File([blob], file.name, { type: file.type })
+            formData.append('file', resizedFile)
+            formData.append('folder', type === 'logo' ? 'logos' : 'banners')
+
+            const response = await fetch('/api/upload', {
+              method: 'POST',
+              body: formData
+            })
+
+            const result = await response.json()
+
+            if (response.ok) {
+              setFormData(prev => ({
+                ...prev,
+                [type === 'logo' ? 'projectLogoUrl' : 'projectBannerUrl']: result.url
+              }))
+              resolve({ success: true, url: result.url })
+            } else {
+              resolve({ success: false, error: result.error })
+            }
+          } catch (error) {
+            resolve({ success: false, error: 'Upload failed' })
+          } finally {
+            setUploadingFiles(prev => ({ ...prev, [type]: false }))
+          }
+        }, file.type, 0.9)
+      }
+
+      img.src = URL.createObjectURL(file)
+    })
+  }
+
+  const removeUploadedFile = (type) => {
+    setFormData(prev => ({
+      ...prev,
+      [type === 'logo' ? 'projectLogoUrl' : 'projectBannerUrl']: ''
     }))
   }
 
@@ -55,12 +140,17 @@ export default function HackathonForm() {
         setFormData({
           teamName: '',
           teamLeadName: '',
-          email: '',
-          contact: '',
+          teamLeadEmail: '',
+          teamLeadContact: '',
+          projectTitle: '',
+          projectDescription: '',
           gitLink: '',
           projectUrl: '',
-          otherDetails: ''
+          projectLogoUrl: '',
+          projectBannerUrl: '',
+          videoDemoLink: ''
         })
+        setWordCount(0)
       } else {
         setSubmitStatus('error')
         setSubmitMessage(result.error || 'Submission failed. Please try again.')
@@ -164,40 +254,81 @@ export default function HackathonForm() {
                 </div>
               </div>
 
-              {/* Contact Information */}
+              {/* Team Lead Contact Information */}
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-slate-200 font-medium flex items-center gap-2">
+                  <Label htmlFor="teamLeadEmail" className="text-slate-200 font-medium flex items-center gap-2">
                     <Mail className="w-4 h-4 text-blue-400" />
-                    Email Address *
+                    Team Lead Email *
                   </Label>
                   <Input
-                    id="email"
-                    name="email"
+                    id="teamLeadEmail"
+                    name="teamLeadEmail"
                     type="email"
-                    value={formData.email}
+                    value={formData.teamLeadEmail}
                     onChange={handleInputChange}
-                    placeholder="team.lead@example.com"
+                    placeholder="lead@example.com"
                     className="bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20"
                     required
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="contact" className="text-slate-200 font-medium flex items-center gap-2">
+                  <Label htmlFor="teamLeadContact" className="text-slate-200 font-medium flex items-center gap-2">
                     <Phone className="w-4 h-4 text-blue-400" />
-                    Contact Number *
+                    Team Lead Contact *
                   </Label>
                   <Input
-                    id="contact"
-                    name="contact"
-                    value={formData.contact}
+                    id="teamLeadContact"
+                    name="teamLeadContact"
+                    value={formData.teamLeadContact}
                     onChange={handleInputChange}
                     placeholder="+1 (555) 123-4567"
                     className="bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20"
                     required
                   />
                 </div>
+              </div>
+
+              {/* Project Information */}
+              <div className="space-y-2">
+                <Label htmlFor="projectTitle" className="text-slate-200 font-medium flex items-center gap-2">
+                  <Rocket className="w-4 h-4 text-blue-400" />
+                  Project Title *
+                </Label>
+                <Input
+                  id="projectTitle"
+                  name="projectTitle"
+                  value={formData.projectTitle}
+                  onChange={handleInputChange}
+                  placeholder="Enter your project title"
+                  className="bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="projectDescription" className="text-slate-200 font-medium flex items-center justify-between">
+                  <span>Project Description (Max 100 words) *</span>
+                  <span className={`text-sm ${wordCount > 100 ? 'text-red-400' : 'text-slate-400'}`}>
+                    {wordCount}/100 words
+                  </span>
+                </Label>
+                <Textarea
+                  id="projectDescription"
+                  name="projectDescription"
+                  value={formData.projectDescription}
+                  onChange={handleInputChange}
+                  placeholder="Describe your project in 100 words or less..."
+                  rows={4}
+                  className={`bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20 resize-none ${
+                    wordCount > 100 ? 'border-red-500' : ''
+                  }`}
+                  required
+                />
+                {wordCount > 100 && (
+                  <p className="text-red-400 text-sm">Please reduce to 100 words or less</p>
+                )}
               </div>
 
               {/* Project Links */}
@@ -233,27 +364,126 @@ export default function HackathonForm() {
                 </div>
               </div>
 
-              {/* Additional Details */}
+              {/* Video Demo Link */}
               <div className="space-y-2">
-                <Label htmlFor="otherDetails" className="text-slate-200 font-medium">
-                  Additional Project Details
+                <Label htmlFor="videoDemoLink" className="text-slate-200 font-medium flex items-center gap-2">
+                  <Video className="w-4 h-4 text-blue-400" />
+                  Video Demo Link
                 </Label>
-                <Textarea
-                  id="otherDetails"
-                  name="otherDetails"
-                  value={formData.otherDetails}
+                <Input
+                  id="videoDemoLink"
+                  name="videoDemoLink"
+                  value={formData.videoDemoLink}
                   onChange={handleInputChange}
-                  placeholder="Tell us more about your project, technologies used, challenges faced, or any other relevant information..."
-                  rows={4}
-                  className="bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20 resize-none"
+                  placeholder="https://youtube.com/watch?v=... or https://vimeo.com/..."
+                  className="bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20"
                 />
+              </div>
+
+              {/* File Uploads */}
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* Project Logo Upload */}
+                <div className="space-y-2">
+                  <Label className="text-slate-200 font-medium flex items-center gap-2">
+                    <FileImage className="w-4 h-4 text-blue-400" />
+                    Project Logo (100x100px)
+                  </Label>
+                  <div className="space-y-3">
+                    {!formData.projectLogoUrl ? (
+                      <div className="border-2 border-dashed border-slate-600 rounded-lg p-4 text-center">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => handleFileUpload(e.target.files[0], 'logo')}
+                          className="hidden"
+                          id="logo-upload"
+                          disabled={uploadingFiles.logo}
+                        />
+                        <label 
+                          htmlFor="logo-upload" 
+                          className={`cursor-pointer flex flex-col items-center gap-2 ${
+                            uploadingFiles.logo ? 'opacity-50' : 'hover:text-blue-400'
+                          }`}
+                        >
+                          <Upload className="w-8 h-8 text-slate-400" />
+                          <span className="text-sm text-slate-400">
+                            {uploadingFiles.logo ? 'Uploading...' : 'Click to upload logo'}
+                          </span>
+                        </label>
+                      </div>
+                    ) : (
+                      <div className="relative border border-slate-600 rounded-lg p-2 bg-slate-900/50">
+                        <img 
+                          src={formData.projectLogoUrl} 
+                          alt="Project Logo" 
+                          className="w-20 h-20 object-cover rounded mx-auto"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeUploadedFile('logo')}
+                          className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Project Banner Upload */}
+                <div className="space-y-2">
+                  <Label className="text-slate-200 font-medium flex items-center gap-2">
+                    <FileImage className="w-4 h-4 text-blue-400" />
+                    Project Banner (300x100px)
+                  </Label>
+                  <div className="space-y-3">
+                    {!formData.projectBannerUrl ? (
+                      <div className="border-2 border-dashed border-slate-600 rounded-lg p-4 text-center">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => handleFileUpload(e.target.files[0], 'banner')}
+                          className="hidden"
+                          id="banner-upload"
+                          disabled={uploadingFiles.banner}
+                        />
+                        <label 
+                          htmlFor="banner-upload" 
+                          className={`cursor-pointer flex flex-col items-center gap-2 ${
+                            uploadingFiles.banner ? 'opacity-50' : 'hover:text-blue-400'
+                          }`}
+                        >
+                          <Upload className="w-8 h-8 text-slate-400" />
+                          <span className="text-sm text-slate-400">
+                            {uploadingFiles.banner ? 'Uploading...' : 'Click to upload banner'}
+                          </span>
+                        </label>
+                      </div>
+                    ) : (
+                      <div className="relative border border-slate-600 rounded-lg p-2 bg-slate-900/50">
+                        <img 
+                          src={formData.projectBannerUrl} 
+                          alt="Project Banner" 
+                          className="w-full h-20 object-cover rounded"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeUploadedFile('banner')}
+                          className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
 
               {/* Submit Button */}
               <div className="pt-4">
                 <Button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || wordCount > 100 || uploadingFiles.logo || uploadingFiles.banner}
                   className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 >
                   {isSubmitting ? (
