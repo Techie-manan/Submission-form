@@ -66,11 +66,15 @@ def test_submit_valid_data():
     valid_data = {
         "teamName": "Tech Innovators",
         "teamLeadName": "Alice Johnson",
-        "email": "alice.johnson@example.com",
-        "contact": "+1-555-0123",
+        "teamLeadEmail": "alice.johnson@example.com",
+        "teamLeadContact": "+1-555-0123",
+        "projectTitle": "AI Sustainability Tracker",
+        "projectDescription": "We're building an AI-powered sustainability tracker that helps organizations monitor and reduce their carbon footprint through intelligent data analysis and actionable insights.",
         "gitLink": "https://github.com/techinnovators/hackathon-project",
         "projectUrl": "https://techinnovators.demo.com",
-        "otherDetails": "We're building an AI-powered sustainability tracker"
+        "projectLogoUrl": "https://demo-storage.supabase.co/logos/tech-innovators-logo.png",
+        "projectBannerUrl": "https://demo-storage.supabase.co/banners/tech-innovators-banner.jpg",
+        "videoDemoLink": "https://youtube.com/watch?v=demo123"
     }
     
     try:
