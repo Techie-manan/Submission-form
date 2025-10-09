@@ -492,6 +492,8 @@ def run_comprehensive_test():
     test_results.append(("Health Endpoint", test_health_endpoint()))
     test_results.append(("Submit Valid Data", test_submit_valid_data()))
     test_results.append(("Submit Missing Fields", test_submit_missing_required_fields()))
+    test_results.append(("Word Count Validation", test_project_description_word_count()))
+    test_results.append(("File Upload Endpoint", test_file_upload_endpoint()))
     test_results.append(("Get Submissions", test_get_submissions()))
     test_results.append(("Invalid Endpoints", test_invalid_endpoints()))
     
