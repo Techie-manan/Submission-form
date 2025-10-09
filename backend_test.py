@@ -137,32 +137,60 @@ def test_submit_missing_required_fields():
             "name": "Missing teamName",
             "data": {
                 "teamLeadName": "Bob Smith",
-                "email": "bob@example.com",
-                "contact": "+1-555-0456"
+                "teamLeadEmail": "bob@example.com",
+                "teamLeadContact": "+1-555-0456",
+                "projectTitle": "Test Project",
+                "projectDescription": "A test project description"
             }
         },
         {
             "name": "Missing teamLeadName", 
             "data": {
                 "teamName": "Code Warriors",
-                "email": "team@example.com",
-                "contact": "+1-555-0789"
+                "teamLeadEmail": "team@example.com",
+                "teamLeadContact": "+1-555-0789",
+                "projectTitle": "Test Project",
+                "projectDescription": "A test project description"
             }
         },
         {
-            "name": "Missing email",
+            "name": "Missing teamLeadEmail",
             "data": {
                 "teamName": "Data Wizards",
                 "teamLeadName": "Carol Davis",
-                "contact": "+1-555-0321"
+                "teamLeadContact": "+1-555-0321",
+                "projectTitle": "Test Project",
+                "projectDescription": "A test project description"
             }
         },
         {
-            "name": "Missing contact",
+            "name": "Missing teamLeadContact",
             "data": {
                 "teamName": "AI Pioneers",
                 "teamLeadName": "David Wilson",
-                "email": "david@example.com"
+                "teamLeadEmail": "david@example.com",
+                "projectTitle": "Test Project",
+                "projectDescription": "A test project description"
+            }
+        },
+        {
+            "name": "Missing projectTitle",
+            "data": {
+                "teamName": "Innovation Squad",
+                "teamLeadName": "Emma Brown",
+                "teamLeadEmail": "emma@example.com",
+                "teamLeadContact": "+1-555-0654",
+                "projectDescription": "A test project description"
+            }
+        },
+        {
+            "name": "Missing projectDescription",
+            "data": {
+                "teamName": "Future Builders",
+                "teamLeadName": "Frank Miller",
+                "teamLeadEmail": "frank@example.com",
+                "teamLeadContact": "+1-555-0987",
+                "projectTitle": "Test Project"
             }
         },
         {
