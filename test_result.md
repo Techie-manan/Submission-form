@@ -215,7 +215,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "All backend API endpoints tested and verified"
+    - "Updated backend API endpoints with new schema tested and verified"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
@@ -223,3 +223,5 @@ test_plan:
 agent_communication:
     - agent: "testing"
       message: "Comprehensive backend API testing completed successfully. All 5 test categories passed: Health endpoint, form submission with valid data, form submission validation, get submissions, and invalid endpoint handling. Demo mode is working correctly with mock data persistence. Additional edge cases tested including minimal required fields and malformed JSON handling. Backend is fully functional and ready for production."
+    - agent: "testing"
+      message: "Updated API testing completed successfully. All 7 test categories passed: Health endpoint, form submission with new schema, missing fields validation, project description word count validation, file upload endpoint, get submissions with new schema, and invalid endpoints. New required fields (teamLeadEmail, teamLeadContact, projectTitle, projectDescription) and optional fields (projectLogoUrl, projectBannerUrl, videoDemoLink) working correctly. Word count validation (max 100 words) and file upload validation (images only, 5MB max) functioning properly. Demo mode persistence working with updated schema. Backend API fully functional with new requirements."
