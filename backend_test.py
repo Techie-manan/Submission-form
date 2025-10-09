@@ -260,7 +260,7 @@ def test_get_submissions():
             # If there are submissions, validate structure
             if len(data) > 0:
                 submission = data[0]
-                required_fields = ['id', 'teamName', 'teamLeadName', 'email', 'contact', 'createdAt']
+                required_fields = ['id', 'teamName', 'teamLeadName', 'teamLeadEmail', 'teamLeadContact', 'projectTitle', 'projectDescription', 'createdAt']
                 for field in required_fields:
                     if field not in submission:
                         print(f"❌ Missing field '{field}' in submission")
