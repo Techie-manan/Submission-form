@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Test the hackathon form submission backend API with GET /api/health, POST /api/submit, and GET /api/submissions endpoints in demo Supabase mode"
+user_problem_statement: "Test the updated hackathon form submission backend API with new fields: teamLeadEmail, teamLeadContact, projectTitle, projectDescription (max 100 words), and optional fields: projectLogoUrl, projectBannerUrl, videoDemoLink. Test POST /api/submit, POST /api/upload, GET /api/submissions, and GET /api/health endpoints with new validation rules."
 
 backend:
   - task: "Health Check Endpoint"
@@ -116,8 +116,11 @@ backend:
         - working: true
           agent: "testing"
           comment: "GET /api/health endpoint working correctly. Returns proper JSON with status='ok', timestamp in ISO format, and mode='demo'. All validation checks passed."
+        - working: true
+          agent: "testing"
+          comment: "Re-tested with updated API - Health endpoint continues to work correctly with same response structure."
 
-  - task: "Form Submission Endpoint"
+  - task: "Form Submission Endpoint with New Schema"
     implemented: true
     working: true
     file: "app/api/[[...path]]/route.js"
@@ -127,9 +130,9 @@ backend:
     status_history:
         - working: true
           agent: "testing"
-          comment: "POST /api/submit endpoint working correctly. Validates required fields (teamName, teamLeadName, email, contact), accepts optional fields (gitLink, projectUrl, otherDetails), returns proper success response with demo ID format. Tested with valid data, missing fields, and minimal data - all scenarios work as expected."
+          comment: "POST /api/submit endpoint updated and working correctly with NEW required fields: teamName, teamLeadName, teamLeadEmail, teamLeadContact, projectTitle, projectDescription. Optional fields: gitLink, projectUrl, projectLogoUrl, projectBannerUrl, videoDemoLink. All field validation working properly. Returns success response with demo ID format."
 
-  - task: "Get Submissions Endpoint"
+  - task: "Project Description Word Count Validation"
     implemented: true
     working: true
     file: "app/api/[[...path]]/route.js"
@@ -139,9 +142,45 @@ backend:
     status_history:
         - working: true
           agent: "testing"
-          comment: "GET /api/submissions endpoint working correctly. Returns array of submissions with proper structure including id, teamName, teamLeadName, email, contact, createdAt fields. Demo mode persistence working - submissions are stored in mock array and retrievable."
+          comment: "Project description word count validation working correctly. Accepts exactly 100 words, properly rejects 101+ words with error message 'Project description must be 100 words or less. Current: X words.' Validation logic is accurate."
 
-  - task: "Demo Mode Supabase Integration"
+  - task: "Form Validation for Missing Required Fields"
+    implemented: true
+    working: true
+    file: "app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "Missing required fields validation working correctly. Properly rejects submissions missing any of: teamName, teamLeadName, teamLeadEmail, teamLeadContact, projectTitle, projectDescription. Returns 400 status with clear error message listing all required fields."
+
+  - task: "File Upload Endpoint"
+    implemented: true
+    working: true
+    file: "app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "POST /api/upload endpoint working correctly. Validates image file types only, enforces 5MB size limit, rejects invalid file types with proper error messages. Returns success response with demo URL for valid uploads. Minor: Returns 500 instead of 400 for completely missing form data, but core functionality works correctly."
+
+  - task: "Get Submissions Endpoint with New Schema"
+    implemented: true
+    working: true
+    file: "app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "GET /api/submissions endpoint working correctly with updated schema. Returns array of submissions with new structure including: id, teamName, teamLeadName, teamLeadEmail, teamLeadContact, projectTitle, projectDescription, and optional fields. Demo mode persistence working - submissions stored in mock array and retrievable."
+
+  - task: "Demo Mode Supabase Integration with New Schema"
     implemented: true
     working: true
     file: "lib/supabase.js"
@@ -151,7 +190,7 @@ backend:
     status_history:
         - working: true
           agent: "testing"
-          comment: "Demo mode working correctly. Mock submissions array stores data, demo ID generation (demo_timestamp format), simulated API delay, proper error handling. All demo mode functionality verified."
+          comment: "Demo mode working correctly with updated schema. Mock submissions array stores all new fields, demo ID generation (demo_timestamp format), simulated API delay, proper error handling. File upload simulation working with mock URLs. All demo mode functionality verified with new field structure."
 
   - task: "API Error Handling"
     implemented: true
@@ -163,7 +202,7 @@ backend:
     status_history:
         - working: true
           agent: "testing"
-          comment: "Error handling working correctly. Returns 400 for missing required fields with proper error message, 404 for invalid endpoints, 500 for malformed JSON. All error scenarios tested and working as expected."
+          comment: "Error handling working correctly. Returns 400 for missing required fields with proper error message, 404 for invalid endpoints, proper validation errors for word count and file upload restrictions. All error scenarios tested and working as expected."
 
 frontend:
   # No frontend testing performed as per instructions
