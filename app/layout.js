@@ -1,10 +1,13 @@
 import './globals.css'
 
 export const metadata = {
-  title: 'Next.js MongoDB Template',
-  description: 'A simple template with App Router, MongoDB, and shadcn/ui',
+  title: '0xGenIgnite Submission Form',
+  description: 'Participants submit their projects for 0xGenIgnite here',
+  icons: {
+    icon: '/logo.png', // 👈 Path to your logo file in /public
+  },
 }
-
+ 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">

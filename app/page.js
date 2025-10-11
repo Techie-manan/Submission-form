@@ -368,7 +368,7 @@ export default function HackathonForm() {
               <div className="space-y-2">
                 <Label htmlFor="videoDemoLink" className="text-slate-200 font-medium flex items-center gap-2">
                   <Video className="w-4 h-4 text-blue-400" />
-                  Video Demo Link *
+                  Video Demo Post Link(X/Linkedin/Youtube) *
                 </Label>
                 <Input
                   id="videoDemoLink"
