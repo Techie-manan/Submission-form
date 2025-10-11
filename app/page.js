@@ -336,7 +336,7 @@ export default function HackathonForm() {
                 <div className="space-y-2">
                   <Label htmlFor="gitLink" className="text-slate-200 font-medium flex items-center gap-2">
                     <Code2 className="w-4 h-4 text-blue-400" />
-                    Git Repository Link
+                    Git Repository Link *
                   </Label>
                   <Input
                     id="gitLink"
@@ -368,7 +368,7 @@ export default function HackathonForm() {
               <div className="space-y-2">
                 <Label htmlFor="videoDemoLink" className="text-slate-200 font-medium flex items-center gap-2">
                   <Video className="w-4 h-4 text-blue-400" />
-                  Video Demo Link
+                  Video Demo Link *
                 </Label>
                 <Input
                   id="videoDemoLink"
@@ -386,7 +386,7 @@ export default function HackathonForm() {
                 <div className="space-y-2">
                   <Label className="text-slate-200 font-medium flex items-center gap-2">
                     <FileImage className="w-4 h-4 text-blue-400" />
-                    Project Logo (100x100px)
+                    Project Logo (100x100px) *
                   </Label>
                   <div className="space-y-3">
                     {!formData.projectLogoUrl ? (
@@ -433,7 +433,7 @@ export default function HackathonForm() {
                 <div className="space-y-2">
                   <Label className="text-slate-200 font-medium flex items-center gap-2">
                     <FileImage className="w-4 h-4 text-blue-400" />
-                    Project Banner (300x100px)
+                    Project Banner (300x100px) *
                   </Label>
                   <div className="space-y-3">
                     {!formData.projectBannerUrl ? (

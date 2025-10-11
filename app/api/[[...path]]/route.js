@@ -83,8 +83,8 @@ export async function POST(request) {
           return NextResponse.json({ error: 'Only image files are allowed' }, { status: 400 })
         }
 
-        // Validate file size (max 5MB)
-        const maxSize = 5 * 1024 * 1024 // 5MB
+        // Validate file size (max 15MB)
+        const maxSize = 15 * 1024 * 1024 // 15MB
         if (file.size > maxSize) {
           return NextResponse.json({ error: 'File size must be less than 5MB' }, { status: 400 })
         }
