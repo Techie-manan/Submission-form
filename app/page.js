@@ -176,12 +176,12 @@ export default function HackathonForm() {
         {/* Header */}
         <div className="text-center mb-8 pt-8">
           <div className="flex items-center justify-center gap-4 mb-4">
-            
-              {/* <Rocket className="w-8 h-8 text-blue-400" /> */}
-              <img src="/genesis.png" alt="Rocket Icon" className="h-12" />
-              <h1 className='font-bold text-xl'>X</h1>
-              <img src="/duality.png" alt="Gengite Logo" className="h-12" />
-           
+
+            {/* <Rocket className="w-8 h-8 text-blue-400" /> */}
+            <img src="/genesis.png" alt="Rocket Icon" className="h-12" />
+            <h1 className='font-bold text-xl'>X</h1>
+            <img src="/duality.png" alt="Gengite Logo" className="h-12" />
+
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
             Duality Hackathon
@@ -205,8 +205,8 @@ export default function HackathonForm() {
             {/* Status Alert */}
             {submitStatus && (
               <Alert className={`mb-6 ${submitStatus === 'success'
-                  ? 'border-green-500/50 bg-green-500/10'
-                  : 'border-red-500/50 bg-red-500/10'
+                ? 'border-green-500/50 bg-green-500/10'
+                : 'border-red-500/50 bg-red-500/10'
                 }`}>
                 {submitStatus === 'success' ? (
                   <CheckCircle2 className="h-4 w-4 text-green-400" />
@@ -227,14 +227,14 @@ export default function HackathonForm() {
                 <div className="space-y-2">
                   <Label htmlFor="teamName" className="text-slate-200 font-medium flex items-center gap-2">
                     <Users className="w-4 h-4 text-blue-400" />
-                    Team Name *
+                    Team Name & PS number*
                   </Label>
                   <Input
                     id="teamName"
                     name="teamName"
                     value={formData.teamName}
                     onChange={handleInputChange}
-                    placeholder="Enter your team name"
+                    placeholder="Enter your team name and PS number"
                     className="bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20"
                     required
                   />
@@ -311,6 +311,26 @@ export default function HackathonForm() {
                 />
               </div>
 
+              {/* Location
+               */}
+
+              <div className="space-y-2">
+                <Label htmlFor="projectUrl" className="text-slate-200 font-medium flex items-center gap-2">
+                  <Rocket className="w-4 h-4 text-blue-400" />
+                  Enter Your State *
+                </Label>
+                <Input
+                  id="projectUrl"
+                  name="projectUrl"
+                  value={formData.projectUrl}
+                  onChange={handleInputChange}
+                  placeholder="Eg: Uttar Pradesh"
+                  className="bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20"
+                  required
+                />
+              </div>
+
+
               <div className="space-y-2">
                 <Label htmlFor="projectDescription" className="text-slate-200 font-medium flex items-center justify-between">
                   <span>Project Description (Max 100 words) *</span>
@@ -327,7 +347,7 @@ export default function HackathonForm() {
                   rows={4}
                   className={`bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20 resize-none ${wordCount > 100 ? 'border-red-500' : ''
                     }`}
-                  required  
+                  required
                 />
                 {wordCount > 100 && (
                   <p className="text-red-400 text-sm">Please reduce to 100 words or less</p>
@@ -339,7 +359,7 @@ export default function HackathonForm() {
                 <div className="space-y-2">
                   <Label htmlFor="gitLink" className="text-slate-200 font-medium flex items-center gap-2">
                     <Code2 className="w-4 h-4 text-blue-400" />
-                    Git Repository Link 
+                    Git Repository Link
                   </Label>
                   <Input
                     id="gitLink"
@@ -385,8 +405,8 @@ export default function HackathonForm() {
 
               {/* File Uploads */}
               {/* <div className="grid md:grid-cols-2 gap-6"> */}
-                {/* Project Logo Upload */}
-                {/* <div className="space-y-2">
+              {/* Project Logo Upload */}
+              {/* <div className="space-y-2">
                   <Label className="text-slate-200 font-medium flex items-center gap-2">
                     <FileImage className="w-4 h-4 text-blue-400" />
                     Project Logo (100x100px) *
@@ -432,8 +452,8 @@ export default function HackathonForm() {
                   </div>
                 </div> */}
 
-                {/* Project Banner Upload */}
-                {/* <div className="space-y-2">
+              {/* Project Banner Upload */}
+              {/* <div className="space-y-2">
                   <Label className="text-slate-200 font-medium flex items-center gap-2">
                     <FileImage className="w-4 h-4 text-blue-400" />
                     Project Banner (300x100px) *
