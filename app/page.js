@@ -175,11 +175,14 @@ export default function HackathonForm() {
       <div className="relative z-10 container mx-auto max-w-4xl">
         {/* Header */}
         <div className="text-center mb-8 pt-8">
-          {/* <div className="flex justify-center mb-4">
-            <div className="p-3 rounded-full bg-blue-600/20 border border-blue-500/30">
-              <Rocket className="w-8 h-8 text-blue-400" />
-            </div>
-          </div> */}
+          <div className="flex items-center justify-center gap-4 mb-4">
+            
+              {/* <Rocket className="w-8 h-8 text-blue-400" /> */}
+              <img src="/genesis.png" alt="Rocket Icon" className="h-12" />
+              <h1 className='font-bold text-xl'>X</h1>
+              <img src="/duality.png" alt="Gengite Logo" className="h-12" />
+           
+          </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
             Duality Hackathon
             <span className="block text-violet-200 mt-2">PPT Submission Portal</span>
