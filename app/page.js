@@ -181,11 +181,11 @@ export default function HackathonForm() {
             </div>
           </div> */}
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-            0xGeningite
-            <span className="block text-violet-200 mt-2">Project Submission Portal</span>
+            Duality Hackathon
+            <span className="block text-violet-200 mt-2">PPT Submission Portal</span>
           </h1>
           <p className="text-slate-300 text-lg max-w-2xl mx-auto">
-            Submit your innovative project and compete with the best minds.
+            Submit your innovative project PPT and compete with the best minds.
             Share your creation and let your code speak for itself.
           </p>
         </div>
@@ -336,7 +336,7 @@ export default function HackathonForm() {
                 <div className="space-y-2">
                   <Label htmlFor="gitLink" className="text-slate-200 font-medium flex items-center gap-2">
                     <Code2 className="w-4 h-4 text-blue-400" />
-                    Git Repository Link *
+                    Git Repository Link 
                   </Label>
                   <Input
                     id="gitLink"
@@ -345,10 +345,10 @@ export default function HackathonForm() {
                     onChange={handleInputChange}
                     placeholder="https://github.com/your-team/project"
                     className="bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20"
-                 required />
+                  />
                 </div>
 
-                <div className="space-y-2">
+                {/* <div className="space-y-2">
                   <Label htmlFor="projectUrl" className="text-slate-200 font-medium flex items-center gap-2">
                     <ExternalLink className="w-4 h-4 text-blue-400" />
                     Project Demo URL
@@ -361,29 +361,29 @@ export default function HackathonForm() {
                     placeholder="https://your-project-demo.com"
                     className="bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20"
                   />
-                </div>
+                </div> */}
               </div>
 
               {/* Video Demo Link */}
               <div className="space-y-2">
                 <Label htmlFor="videoDemoLink" className="text-slate-200 font-medium flex items-center gap-2">
                   <Video className="w-4 h-4 text-blue-400" />
-                  Video Demo Post Link(X/Linkedin/Youtube) *
+                  Drive Link to Project PPT *
                 </Label>
                 <Input
                   id="videoDemoLink"
                   name="videoDemoLink"
                   value={formData.videoDemoLink}
                   onChange={handleInputChange}
-                  placeholder="https://youtube.com/watch?v=... or https://vimeo.com/..."
+                  placeholder="https://drive.google.com/file/..."
                   className="bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20"
                 />
               </div>
 
               {/* File Uploads */}
-              <div className="grid md:grid-cols-2 gap-6">
+              {/* <div className="grid md:grid-cols-2 gap-6"> */}
                 {/* Project Logo Upload */}
-                <div className="space-y-2">
+                {/* <div className="space-y-2">
                   <Label className="text-slate-200 font-medium flex items-center gap-2">
                     <FileImage className="w-4 h-4 text-blue-400" />
                     Project Logo (100x100px) *
@@ -427,10 +427,10 @@ export default function HackathonForm() {
                       </div>
                     )}
                   </div>
-                </div>
+                </div> */}
 
                 {/* Project Banner Upload */}
-                <div className="space-y-2">
+                {/* <div className="space-y-2">
                   <Label className="text-slate-200 font-medium flex items-center gap-2">
                     <FileImage className="w-4 h-4 text-blue-400" />
                     Project Banner (300x100px) *
@@ -474,8 +474,8 @@ export default function HackathonForm() {
                       </div>
                     )}
                   </div>
-                </div>
-              </div>
+                </div> */}
+              {/* </div> */}
 
               {/* Submit Button */}
               <div className="pt-4">
