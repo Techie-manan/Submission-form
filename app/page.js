@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { AlertCircle, CheckCircle2, Rocket, Users, Code2, ExternalLink, Mail, Phone, FileImage, Video, Upload, X } from 'lucide-react'
+import { AlertCircle, CheckCircle2, Rocket, Users, Code2, ExternalLink, Mail, Phone, FileImage, Video, Upload, X, Pin, MapPin } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export default function HackathonForm() {
@@ -316,7 +316,7 @@ export default function HackathonForm() {
 
               <div className="space-y-2">
                 <Label htmlFor="projectUrl" className="text-slate-200 font-medium flex items-center gap-2">
-                  <Rocket className="w-4 h-4 text-blue-400" />
+                  <MapPin className="w-4 h-4 text-blue-400" />
                   Enter Your State *
                 </Label>
                 <Input
